@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Tab - Literary Quotes</title>
+    <style>
+        :root {
+            --bg-color: #f8f8f8;
+            --text-color: #333;
+            --accent-color: #5271ff;
+            --secondary-color: #f0f0f0;
+            --border-color: #e0e0e0;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --font-main: 'Georgia', serif;
+            --font-secondary: 'Arial', sans-serif;
+        }
+
+        .dark-mode {
+            --bg-color: #1e1e2e;
+            --text-color: #f0f0f0;
+            --accent-color: #7382ff;
+            --secondary-color: #2d2d3a;
+            --border-color: #3d3d4a;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 80%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px;
+            border-radius: 12px;
+            background-color: var(--bg-color);
+            box-shadow: 0 8px 25px var(--shadow-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .quote-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 200px;
+            width: 100%;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .quote-text {
+            font-size: 2rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .quote-text::before {
+            content: """;
+            font-size: 6rem;
+            position: absolute;
+            left: -40px;
+            top: -50px;
+            opacity: 0.2;
+            color: var(--accent-color);
+        }
+
+        .quote-author {
+            font-style: italic;
+            font-size: 1.2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+            align-self: flex-end;
+            margin-top: 20px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: var(--font-secondary);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .upper-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        .icon-btn:hover {
+            color: var(--accent-color);
+            background-color: var(--secondary-color);
+        }
+
+        .loading {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--secondary-color);
+            border-radius: 50%;
+            border-top: 4px solid var(--accent-color);
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--accent-color);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .fade-in {
+            opacity: 1;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 10px;
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="upper-controls">
+        <button class="icon-btn" id="langToggle" title="Toggle Language">
+            EN
+        </button>
+        <button class="icon-btn" id="themeToggle" title="Toggle Theme">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path id="themeIcon" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+        </button>
+    </div>
+
+    <div class="container">
+        <div class="quote-container">
+            <div class="loading" id="loading"></div>
+            <p class="quote-text" id="quoteText">Loading your quote...</p>
+            <p class="quote-author" id="quoteAuthor"></p>
+        </div>
+
+        <div class="controls">
+            <button class="btn" id="refreshQuote">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M23 4v6h-6"></path>
+                    <path d="M1 20v-6h6"></path>
+                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"></path>
+                    <path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"></path>
+                </svg>
+                New Quote
+            </button>
+            <button class="btn" id="copyQuote">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                Copy
+            </button>
+        </div>
+    </div>
+
+    <div class="notification" id="notification">Copied to clipboard!</div>
+    <div class="footer">Literary Quotes Extension</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // DOM Elements
+            const quoteText = document.getElementById('quoteText');
+            const quoteAuthor = document.getElementById('quoteAuthor');
+            const refreshBtn = document.getElementById('refreshQuote');
+            const copyBtn = document.getElementById('copyQuote');
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const langToggle = document.getElementById('langToggle');
+            const loading = document.getElementById('loading');
+            const notification = document.getElementById('notification');
+            
+            // Default language
+            let language = 'en';
+            
+            // Check for Chrome storage API (for extension)
+            if (typeof chrome !== 'undefined' && chrome.storage) {
+                // Get saved preferences from storage
+                chrome.storage.sync.get(['language', 'theme'], function(result) {
+                    // Set language from storage or default to English
+                    language = result.language || 'en';
+                    langToggle.textContent = language.toUpperCase();
+                    
+                    // Set theme from storage or default based on system preference
+                    if (result.theme === 'dark' || 
+                      (result.theme === undefined && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                        document.body.classList.add('dark-mode');
+                        themeIcon.setAttribute("d", "M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z");
+                    }
+                    
+                    // Fetch initial quote
+                    fetchQuote();
+                });
+            } else {
+                // Check user's preferred theme if not in extension context
+                const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+                if (prefersDarkScheme.matches) {
+                    document.body.classList.add("dark-mode");
+                    themeIcon.setAttribute("d", "M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z");
+                }
+                
+                // Fetch initial quote
+                fetchQuote();
+            }
+            
+            // Function to fetch a quote using the background script
+            function fetchQuote() {
+                loading.style.display = 'block';
+                quoteText.style.opacity = '0.3';
+                quoteAuthor.style.opacity = '0.3';
+                
+                // Send message to background script to fetch quote
+                chrome.runtime.sendMessage(
+                    { action: 'fetchQuote', language: language },
+                    function(response) {
+                        if (response && !response.error) {
+                            quoteText.textContent = response.quoteText || "The quieter you become, the more you can hear.";
+                            quoteAuthor.textContent = response.quoteAuthor ? `— ${response.quoteAuthor}` : '— Unknown';
+                        } else {
+                            console.error('Error fetching quote:', response ? response.error : 'No response');
+                            quoteText.textContent = "Books are a uniquely portable magic.";
+                            quoteAuthor.textContent = "— Stephen King";
+                        }
+                        
+                        quoteText.style.opacity = '1';
+                        quoteAuthor.style.opacity = '1';
+                        loading.style.display = 'none';
+                    }
+                );
+            }
+
+            // Toggle theme
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                
+                if (document.body.classList.contains('dark-mode')) {
+                    themeIcon.setAttribute("d", "M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z");
+                    
+                    // Save preference if in extension context
+                    if (typeof chrome !== 'undefined' && chrome.storage) {
+                        chrome.storage.sync.set({ 'theme': 'dark' });
+                    }
+                } else {
+                    themeIcon.setAttribute("d", "M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z");
+                    
+                    // Save preference if in extension context
+                    if (typeof chrome !== 'undefined' && chrome.storage) {
+                        chrome.storage.sync.set({ 'theme': 'light' });
+                    }
+                }
+            });
+
+            // Toggle language
+            langToggle.addEventListener('click', () => {
+                language = language === 'en' ? 'ru' : 'en';
+                langToggle.textContent = language.toUpperCase();
+                
+                // Save preference if in extension context
+                if (typeof chrome !== 'undefined' && chrome.storage) {
+                    chrome.storage.sync.set({ 'language': language });
+                }
+                
+                fetchQuote();
+            });
+
+            // Copy quote to clipboard
+            copyBtn.addEventListener('click', () => {
+                const textToCopy = `${quoteText.textContent} ${quoteAuthor.textContent}`;
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    notification.classList.add('fade-in');
+                    setTimeout(() => {
+                        notification.classList.remove('fade-in');
+                    }, 2000);
+                });
+            });
+
+            // Refresh quote
+            refreshBtn.addEventListener('click', fetchQuote);
+        });
+    </script>
+</body>
+</html>
