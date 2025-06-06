@@ -5,20 +5,11 @@ const refreshBtn = document.getElementById('refreshQuote');
 const copyBtn = document.getElementById('copyQuote');
 const themeToggle = document.getElementById('themeToggle');
 const themeIcon = document.getElementById('themeIcon');
-const langToggle = document.getElementById('langToggle');
-const langText = document.getElementById('langText');
 const loading = document.getElementById('loading');
 const notification = document.getElementById('notification');
 
-// Default language
-let language = 'en';
-
 // Get saved preferences from storage
-chrome.storage.sync.get(['language', 'theme'], function(result) {
-    // Set language from storage or default to English
-    language = result.language || 'en';
-    langText.textContent = language.toUpperCase();
-    
+chrome.storage.sync.get(['theme'], function(result) {
     // Set theme from storage or default based on system preference
     if (result.theme === 'dark' || 
        (result.theme === undefined && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -36,24 +27,49 @@ function fetchQuote() {
     quoteText.style.opacity = '0.3';
     quoteAuthor.style.opacity = '0.3';
     
-    // Send message to background script to fetch quote
-    chrome.runtime.sendMessage(
-        { action: 'fetchQuote', language: language },
-        function(response) {
-            if (response && !response.error) {
-                quoteText.textContent = response.quoteText || "The quieter you become, the more you can hear.";
-                quoteAuthor.textContent = response.quoteAuthor ? `— ${response.quoteAuthor}` : '— Unknown';
-            } else {
-                console.error('Error fetching quote:', response ? response.error : 'No response');
-                quoteText.textContent = "Books are a uniquely portable magic.";
-                quoteAuthor.textContent = "— Stephen King";
+    // Fallback in case chrome runtime is not available or fails
+    const fallbackTimeout = setTimeout(() => {
+        console.log("Fallback timeout triggered");
+        quoteText.textContent = "Books are a uniquely portable magic.";
+        quoteAuthor.textContent = "— Stephen King";
+        quoteText.style.opacity = '1';
+        quoteAuthor.style.opacity = '1';
+        loading.style.display = 'none';
+    }, 5000); // 5 second timeout
+    
+    try {
+        // Send message to background script to fetch quote
+        chrome.runtime.sendMessage(
+            { action: 'fetchQuote', language: 'en' },
+            function(response) {
+                // Clear the fallback timeout since we got a response
+                clearTimeout(fallbackTimeout);
+                
+                if (response) {
+                    console.log("Quote response received:", response);
+                    quoteText.textContent = response.quoteText || "The quieter you become, the more you can hear.";
+                    quoteAuthor.textContent = response.quoteAuthor ? `— ${response.quoteAuthor}` : '— Unknown';
+                } else {
+                    console.error('No response from background script');
+                    quoteText.textContent = "Books are a uniquely portable magic.";
+                    quoteAuthor.textContent = "— Stephen King";
+                }
+                
+                quoteText.style.opacity = '1';
+                quoteAuthor.style.opacity = '1';
+                loading.style.display = 'none';
             }
-            
-            quoteText.style.opacity = '1';
-            quoteAuthor.style.opacity = '1';
-            loading.style.display = 'none';
-        }
-    );
+        );
+    } catch (error) {
+        console.error("Error sending message to background script:", error);
+        clearTimeout(fallbackTimeout); // Clear timeout to avoid duplicate fallbacks
+        
+        quoteText.textContent = "A reader lives a thousand lives before he dies. The man who never reads lives only one.";
+        quoteAuthor.textContent = "— George R.R. Martin";
+        quoteText.style.opacity = '1';
+        quoteAuthor.style.opacity = '1';
+        loading.style.display = 'none';
+    }
 }
 
 // Toggle theme
@@ -71,17 +87,6 @@ themeToggle.addEventListener('click', () => {
         // Save preference
         chrome.storage.sync.set({ 'theme': 'light' });
     }
-});
-
-// Toggle language
-langToggle.addEventListener('click', () => {
-    language = language === 'en' ? 'ru' : 'en';
-    langText.textContent = language.toUpperCase();
-    
-    // Save preference
-    chrome.storage.sync.set({ 'language': language });
-    
-    fetchQuote();
 });
 
 // Copy quote to clipboard
