@@ -44,6 +44,9 @@ const fallbackQuotes = [
   }
 ];
 
+// Import quote service for scalability
+const { fetchQuote, getRandomFallbackQuote } = require('./src/services/quoteService');
+
 // Listen for installation or update events
 chrome.runtime.onInstalled.addListener(() => {
   console.log('Literary Quotes extension installed or updated');
@@ -82,157 +85,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
   }
 });
-
-// Function to get a random fallback quote
-function getRandomFallbackQuote() {
-  const randomIndex = Math.floor(Math.random() * fallbackQuotes.length);
-  return {
-    ...fallbackQuotes[randomIndex],
-    source: 'fallback'
-  };
-}
-
-// Function to fetch a quote
-async function fetchQuote() {
-  try {
-    // Try to fetch from the API first
-    console.log('Attempting to fetch quote from APIs');
-    
-    // Try multiple API endpoints/methods
-    const quote = await tryMultipleAPIs();
-    if (quote) {
-      return quote;
-    }
-    
-    // If API fails, try to get from cache
-    if (cachedQuotes.length > 0) {
-      console.log('Using cached quote');
-      return cachedQuotes.pop();
-    }
-    
-    // Last resort: use fallback quotes
-    console.log('Using fallback quote');
-    return getRandomFallbackQuote();
-    
-  } catch (error) {
-    console.error('Error fetching quote:', error);
-    
-    // Return a fallback quote
-    return getRandomFallbackQuote();
-  }
-}
-
-// Try multiple API methods to get quotes
-async function tryMultipleAPIs() {
-  // Method 1: Try Forismatic API with JSONP workaround
-  try {
-    const forismaticQuote = await fetchFromForismatic();
-    if (forismaticQuote) {
-      return forismaticQuote;
-    }
-  } catch (error) {
-    console.log('Forismatic API failed:', error.message);
-  }
-  
-  // Method 2: Try alternative quote APIs
-  try {
-    const altQuote = await fetchFromAlternativeAPI();
-    if (altQuote) {
-      return altQuote;
-    }
-  } catch (error) {
-    console.log('Alternative API failed:', error.message);
-  }
-  
-  return null;
-}
-
-// Fetch from Forismatic API
-async function fetchFromForismatic() {
-  try {
-    // Only use English for Forismatic API
-    const apiUrl = `https://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en&key=${Date.now()}`;
-    
-    console.log('Fetching from Forismatic:', apiUrl);
-    
-    const response = await fetch(apiUrl, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-      }
-    });
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    
-    const text = await response.text();
-    console.log('Forismatic raw response:', text);
-    
-    // Clean up the response (Forismatic sometimes returns malformed JSON)
-    const cleanText = text.replace(/\\/g, '').replace(/"/g, '"').replace(/"/g, '"');
-    
-    let data;
-    try {
-      data = JSON.parse(cleanText);
-    } catch (parseError) {
-      console.error('JSON parse error:', parseError);
-      throw new Error('Invalid JSON response');
-    }
-    
-    if (data && data.quoteText) {
-      const quote = {
-        quoteText: data.quoteText.trim(),
-        quoteAuthor: data.quoteAuthor ? data.quoteAuthor.trim() : 'Unknown',
-        source: 'forismatic'
-      };
-      console.log('Successfully fetched from Forismatic:', quote);
-      return quote;
-    }
-    
-    throw new Error('No quote data in response');
-    
-  } catch (error) {
-    console.error('Forismatic API error:', error);
-    throw error;
-  }
-}
-
-// Fetch from alternative quote API
-async function fetchFromAlternativeAPI() {
-  try {
-    console.log('Fetching from Quotable API');
-    const response = await fetch('https://api.quotable.io/random?tags=wisdom,inspirational,literature', {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-      }
-    });
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    
-    const data = await response.json();
-    console.log('Quotable response:', data);
-    
-    if (data && data.content) {
-      const quote = {
-        quoteText: data.content,
-        quoteAuthor: data.author || 'Unknown',
-        source: 'quotable'
-      };
-      console.log('Successfully fetched from Quotable:', quote);
-      return quote;
-    }
-    
-    throw new Error('No quote data in response');
-    
-  } catch (error) {
-    console.error('Alternative API error:', error);
-    throw error;
-  }
-}
 
 // Cache quotes for faster access
 const cachedQuotes = [];
