@@ -1,0 +1,29 @@
+# Node modules
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# VSCode
+.vscode/
+
+# Mac system files
+.DS_Store
+
+# Test coverage
+coverage/
+
+# Build output
+dist/
+
+# OS generated files
+Thumbs.db
+
+# Env files
+.env
+.env.*
+
+# Misc
+*.zip

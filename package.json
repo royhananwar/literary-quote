@@ -1,0 +1,15 @@
+{
+  "name": "literary-quote-extension",
+  "version": "1.0.0",
+  "description": "Literary Quotes Chrome Extension",
+  "main": "background.js",
+  "directories": {
+    "lib": "src/services"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0"
+  }
+}
