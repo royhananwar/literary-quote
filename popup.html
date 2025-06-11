@@ -58,82 +58,16 @@
             border: 1px solid var(--border-color);
         }
 
-        .quote-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            min-height: 150px;
-            width: 100%;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .quote-text {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .quote-text::before {
-            content: """;
-            font-size: 3rem;
-            position: absolute;
-            left: -15px;
-            top: -25px;
-            opacity: 0.2;
-            color: var(--accent-color);
-        }
-
-        .quote-author {
-            font-style: italic;
-            font-size: 0.9rem;
-            color: var(--text-color);
-            opacity: 0.8;
-            align-self: flex-end;
-            margin-top: 10px;
-        }
-
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            width: 100%;
-            margin-top: 20px;
-        }
-        
+        .quote-container,
+        .quote-text,
+        .quote-author,
+        .controls,
         .settings {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid var(--border-color);
+            display: none !important;
         }
-
-        .btn {
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            border: none;
-            padding: 8px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: var(--font-secondary);
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn:hover {
-            background-color: var(--accent-color);
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .btn svg {
-            width: 16px;
-            height: 16px;
+        /* Remove broken .quote-text::before */
+        .quote-text::before {
+            content: none !important;
         }
 
         .loading {
@@ -175,48 +109,232 @@
             opacity: 0.7;
             margin-top: 15px;
         }
+
+        .tabs {
+            display: flex;
+            width: 100%;
+            margin-bottom: 18px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px 0;
+            background: var(--secondary-color);
+            color: var(--text-color);
+            border: none;
+            border-bottom: 2px solid transparent;
+            font-family: var(--font-secondary);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s, border-bottom 0.2s;
+        }
+
+        .tab-btn.active {
+            border-bottom: 2px solid var(--accent-color);
+            background: var(--bg-color);
+            color: var(--accent-color);
+        }
+
+        .tab-content {
+            width: 100%;
+            min-height: 180px;
+        }
+
+        .favorites-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 180px;
+            opacity: 0.8;
+            color: var(--text-color);
+        }
+
+        .settings-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .switch-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .btn.danger {
+            background-color: #ffeded;
+            color: #d32f2f;
+            border: 1px solid #d32f2f;
+            font-weight: bold;
+        }
+        .btn.danger:hover {
+            background-color: #d32f2f;
+            color: #fff;
+            border: 1px solid #d32f2f;
+        }
+
+        .btn.disable-btn {
+            background: linear-gradient(90deg, #ffbcbc 0%, #ffe0e0 100%);
+            color: #b71c1c;
+            border: 1.5px solid #ffbcbc;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 12px rgba(255, 0, 0, 0.10);
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.1s;
+            padding: 12px 22px;
+            font-size: 1.05rem;
+            border-radius: 10px;
+            outline: none;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn.disable-btn svg {
+            width: 22px;
+            height: 22px;
+            stroke-width: 2.2;
+            transition: transform 0.2s;
+        }
+        .btn.disable-btn:hover {
+            background: linear-gradient(90deg, #ff5252 0%, #ffbcbc 100%);
+            color: #fff;
+            border: 1.5px solid #ff5252;
+            box-shadow: 0 4px 20px rgba(255, 0, 0, 0.18);
+            transform: translateY(-2px) scale(1.04);
+        }
+        .btn.disable-btn:active {
+            transform: scale(0.98);
+        }
+        .btn.disable-btn .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            background: #b71c1c;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 4px 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
+            pointer-events: none;
+        }
+        .btn.disable-btn:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .favorites-list {
+            max-height: 220px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 10px;
+            padding-right: 4px;
+            background: var(--bg-color);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px var(--shadow-color);
+        }
+        .favorite-item {
+            background: var(--secondary-color);
+            border-radius: 8px;
+            padding: 16px 20px 14px 20px;
+            box-shadow: 0 1px 4px var(--shadow-color);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+            transition: background 0.2s, border 0.2s;
+        }
+        .favorite-item .remove-fav {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .favorite-item .remove-fav:hover {
+            background: var(--accent-color);
+            color: #fff;
+        }
+        .favorite-quote {
+            font-size: 1.08rem;
+            color: var(--text-color);
+            font-family: var(--font-main);
+            margin-bottom: 2px;
+        }
+        .favorite-author {
+            font-size: 0.95rem;
+            color: var(--accent-color);
+            opacity: 0.85;
+            font-style: italic;
+            align-self: flex-end;
+        }
+        .favorites-list::-webkit-scrollbar {
+            width: 6px;
+            background: var(--secondary-color);
+        }
+        .favorites-list::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        .favorites-search-bar {
+            width: 100%;
+            margin-bottom: 8px;
+        }
+        #favoritesSearch:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px var(--accent-color)22;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="quote-container">
-            <div class="loading" id="loading"></div>
-            <p class="quote-text" id="quoteText">Loading your quote...</p>
-            <p class="quote-author" id="quoteAuthor"></p>
+        <div class="tabs">
+            <button class="tab-btn active" id="favoritesTabBtn">Favorites</button>
+            <button class="tab-btn" id="settingsTabBtn">Settings</button>
         </div>
-
-        <div class="controls">
-            <button class="btn" id="refreshQuote">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M23 4v6h-6"></path>
-                    <path d="M1 20v-6h6"></path>
-                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"></path>
-                    <path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"></path>
-                </svg>
-                New Quote
-            </button>
-            <button class="btn" id="copyQuote">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                </svg>
-                Copy
-            </button>
+        <div class="tab-content" id="favoritesTab" style="display: block;">
+            <div class="favorites-search-bar" style="margin-bottom: 12px;">
+                <input type="text" id="favoritesSearch" placeholder="Search favorites..." style="width:100%;padding:8px 12px;border-radius:6px;border:1px solid var(--border-color);background:var(--secondary-color);color:var(--text-color);font-size:1rem;outline:none;" />
+            </div>
+            <div class="favorites-placeholder">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 21l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.18L12 21z"></path></svg>
+                <p style="margin-top: 16px; color: var(--text-color); opacity: 0.7;">Your favorite quotes will appear here.</p>
+            </div>
         </div>
-        
-        <div class="settings">
-            <button class="btn" id="themeToggle">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path id="themeIcon" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                </svg>
-                Theme
-            </button>
+        <div class="tab-content" id="settingsTab" style="display: none;">
+            <div class="settings-section">
+                <label class="switch-label" style="margin-top: 18px;">
+                    <span>Disable Extension</span>
+                    <button class="btn disable-btn" id="disableExtensionBtn" title="Go to Extensions">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="margin-right:8px;"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>
+                        <span>Manage Extension</span>
+                        <span class="tooltip">Go to Chrome Extensions</span>
+                    </button>
+                </label>
+            </div>
         </div>
     </div>
-
-    <div class="notification" id="notification">Copied to clipboard!</div>
     <div class="footer">Literary Quotes Extension</div>
-
     <script src="popup.js"></script>
 </body>
 </html>
