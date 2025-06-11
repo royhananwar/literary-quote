@@ -1,111 +1,99 @@
 # 📚 Literary Quotes Chrome Extension
 
-A beautiful Chrome extension that displays inspirational literary quotes from famous books and authors. Transform your new tab page into a source of daily wisdom and replace the default Chrome popup with elegant quote displays.
+A beautiful Chrome extension that displays inspirational literary quotes from famous books and authors. Transform your new tab page into a source of daily wisdom and manage your favorite quotes with ease.
 
 ![Literary Quotes Extension](https://img.shields.io/badge/version-1.0.0-blue.svg)
 ![Chrome Extension](https://img.shields.io/badge/chrome-extension-green.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
+
+> **Note:** This project was built with the help of AI. Most of the code was written by an AI agent (GitHub Copilot and similar tools) in collaboration with the project owner.
 
 ## ✨ Features
 
 - 🎨 **Beautiful UI**: Clean, modern design with dark/light theme support
 - 📋 **Copy to Clipboard**: Easily share your favorite quotes
 - 🔄 **Refresh**: Get new quotes with a single click
+- 💖 **Favorites**: Save up to 50 favorite quotes, searchable and easily managed
+- 🔍 **Favorites Search**: Instantly search your saved quotes by text or author
+- 🗑️ **Remove Favorites**: Remove any favorite with a single click
 - 📱 **Responsive**: Works perfectly as both popup and new tab page
-- 💾 **Persistent Settings**: Your theme preferences are saved
+- 💾 **Persistent Settings**: Your theme and favorites are saved and synced
 - 🛡️ **Fallback System**: Works offline with cached quotes when API is unavailable
 - 📚 **Literary Focus**: Curated quotes from famous books and authors
 
 ## 🚀 Installation
 
 ### Method 1: Chrome Web Store (Recommended)
-*Coming soon - Extension will be published to Chrome Web Store*
+
+You can install the extension directly from the Chrome Web Store:
+
+[**Download Literary Quotes on Chrome Web Store**](https://chromewebstore.google.com/detail/literary-quotes/cbkfapokindlnbelhogpdikoanaelmkd)
 
 ### Method 2: Developer Mode (Manual Installation)
 
-1. **Download the Extension**
-   ```bash
-   git clone https://github.com/royhananwar/literary-quote.git
-   cd literary-quote
-   ```
+```bash
+git clone https://github.com/royhananwar/literary-quote.git
+cd literary-quote
+```
 
-2. **Open Chrome Extensions Page**
-   - Open Google Chrome
-   - Navigate to `chrome://extensions/`
-   - Enable "Developer mode" (toggle in top-right corner)
+- Open Google Chrome
+- Navigate to `chrome://extensions/`
+- Enable "Developer mode" (toggle in top-right corner)
+- Click "Load unpacked"
+- Select the `literary-quote` folder
+- The extension should now appear in your extensions list
+- (Optional) Pin the extension for quick access
 
-3. **Load the Extension**
-   - Click "Load unpacked"
-   - Select the `literary-quote` folder
-   - The extension should now appear in your extensions list
+## 🛠️ Usage & Features
 
-4. **Pin the Extension (Optional)**
-   - Click the puzzle piece icon in Chrome toolbar
-   - Find "Literary Quotes" and click the pin icon
-   - The extension icon will now appear in your toolbar
+### New Tab Page
 
-## 🛠️ Development Setup
+- Shows a random literary quote with author
+- Buttons for **New Quote**, **Add Favorite**, and **Copy**
+- Click the heart button (**Add Favorite**) to save the current quote
+- Theme toggle in the upper right corner
 
-### Prerequisites
-- Google Chrome browser
-- Basic knowledge of HTML, CSS, and JavaScript
-- Text editor or IDE (VS Code recommended)
+### Popup
 
-### Local Development
+- **Favorites Tab**: View, search, and remove your favorite quotes (newest at the top)
+- **Settings Tab**: Manage extension (disable via Chrome Extensions page)
+- Favorites and theme are synced with the new tab page
 
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/royhananwar/literary-quote.git
-   cd literary-quote
-   ```
+### Favorites
 
-2. **Project Structure**
-   ```
-   literary-quote/
-   ├── manifest.json          # Extension configuration
-   ├── background.js          # Service worker for API calls
-   ├── index.html            # New tab page HTML
-   ├── index.js              # New tab page JavaScript
-   ├── popup.html            # Popup interface HTML
-   ├── popup.js              # Popup interface JavaScript
-   ├── icons/                # Extension icons
-   │   ├── icon16.png
-   │   ├── icon48.png
-   │   └── icon128.png
-   └── README.md
-   ```
+- Save up to 50 favorite quotes
+- Search instantly by quote or author
+- Remove any favorite with the × button
+- Favorites are stored in Chrome sync storage (persisted and synced across devices)
 
-3. **Load in Chrome**
-   - Follow the manual installation steps above
-   - After making changes, click the refresh button on the extension card in `chrome://extensions/`
+### Theme Sync
 
-### Making Changes
-
-1. **Edit Files**: Make your changes to HTML, CSS, or JavaScript files
-2. **Reload Extension**: Go to `chrome://extensions/` and click the refresh button
-3. **Test**: Open a new tab or click the extension icon to test your changes
+- Changing the theme in the new tab instantly updates the popup theme
 
 ## 🔧 Configuration
 
 ### API Integration
-The extension uses the Forismatic API for fetching quotes. If you want to use a different API:
+
+The extension uses the Forismatic and Quotable APIs for fetching quotes. If you want to use a different API:
 
 1. Edit `background.js`
 2. Modify the `fetchQuote` function
 3. Update the API endpoint and response parsing
 
 ### Adding More Fallback Quotes
+
 To add more offline quotes:
 
 1. Open `background.js`
 2. Find the `fallbackQuotes` array
 3. Add your quotes in the format:
-   ```javascript
-   {
-       text: "Your quote text here",
-       author: "Author Name"
-   }
-   ```
+
+```javascript
+{
+    text: "Your quote text here",
+    author: "Author Name"
+}
+```
 
 ## 🌐 Browser Compatibility
 
@@ -120,44 +108,33 @@ To add more offline quotes:
 
 The extension requires the following permissions:
 
-- **Storage**: To save user preferences (theme)
+- **Storage**: To save user preferences (theme, favorites)
 - **Clipboard Write**: To copy quotes to clipboard
 - **Host Permissions**: To fetch quotes from external APIs
 - **Alarms**: For background refresh functionality
+- **Management**: To allow disabling the extension from the popup
 
 ## 🤝 Contributing
 
 We welcome contributions! Please follow these steps:
 
-1. **Fork the Repository**
-   ```bash
-   git fork https://github.com/royhananwar/literary-quote.git
-   ```
+```bash
+git fork https://github.com/royhananwar/literary-quote.git
+git checkout -b feature/amazing-feature
+```
 
-2. **Create a Feature Branch**
-   ```bash
-   git checkout -b feature/amazing-feature
-   ```
+- Make your changes and test thoroughly
+- Update documentation if needed
+- Commit your changes:
 
-3. **Make Your Changes**
-   - Follow the existing code style
-   - Test your changes thoroughly
-   - Update documentation if needed
+```bash
+git commit -m "Add some amazing feature"
+git push origin feature/amazing-feature
+```
 
-4. **Commit Your Changes**
-   ```bash
-   git commit -m "Add some amazing feature"
-   ```
-
-5. **Push to Your Branch**
-   ```bash
-   git push origin feature/amazing-feature
-   ```
-
-6. **Open a Pull Request**
-   - Describe your changes in detail
-   - Include screenshots if applicable
-   - Reference any related issues
+- Open a Pull Request and describe your changes in detail
+- Include screenshots if applicable
+- Reference any related issues
 
 ### Development Guidelines
 
@@ -191,10 +168,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- **Forismatic API** for providing literary quotes
+- **Forismatic API** and **Quotable API** for providing literary quotes
 - **Book lovers and readers** who inspired this project
 - **Open source community** for tools and inspiration
 
-**Made with ❤️ for book lovers everywhere**
+---
 
-*Star ⭐ this repo if you found it helpful!*
+Made with ❤️ for book lovers everywhere
+
+Star ⭐ this repo if you found it helpful!

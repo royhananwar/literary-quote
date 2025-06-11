@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const themeIcon = document.getElementById('themeIcon');
   const loading = document.getElementById('loading');
   const notification = document.getElementById('notification');
+  const favoriteBtn = document.getElementById('favoriteQuote');
   
   // Check for Chrome storage API (for extension)
   if (typeof chrome !== 'undefined' && chrome.storage) {
@@ -120,4 +121,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Refresh quote
   refreshBtn.addEventListener('click', fetchQuote);
+
+  // Add favorites logic
+  function getCurrentQuote() {
+      return {
+          text: quoteText.textContent.trim(),
+          author: quoteAuthor.textContent.replace(/^[-–—\s]+/, '').trim()
+      };
+  }
+
+  function saveFavorite(quote) {
+      chrome.storage.sync.get(['favorites'], (result) => {
+          let favorites = Array.isArray(result.favorites) ? result.favorites : [];
+          // Prevent duplicates
+          if (favorites.some(f => f.text === quote.text && f.author === quote.author)) return;
+          // Limit to 50
+          if (favorites.length >= 50) favorites = favorites.slice(1);
+          favorites.push(quote);
+          chrome.storage.sync.set({ favorites });
+      });
+  }
+
+  favoriteBtn.addEventListener('click', () => {
+      const quote = getCurrentQuote();
+      if (quote.text && quote.author) {
+          saveFavorite(quote);
+          favoriteBtn.classList.add('active');
+          setTimeout(() => favoriteBtn.classList.remove('active'), 800);
+      }
+  });
 });
