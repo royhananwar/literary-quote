@@ -166,6 +166,22 @@ Have an idea? Open an issue with:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## 📋 Changelog
+
+### Version 1.2.0 (2025-01-05)
+- **Background Customization**: Added comprehensive background color and customization settings
+- **Enhanced Settings**: Improved settings panel with saved configuration management
+- **UI Improvements**: Enhanced user interface for better customization experience
+- **Version Update**: Updated extension version to 1.2.0
+
+### Version 1.1.0 and Earlier
+- Initial release with core quote functionality
+- Theme support (light/dark)
+- Favorites management (up to 50 quotes)
+- Search functionality for favorites
+- Copy to clipboard feature
+- Fallback system for offline use
+
 ## 🙏 Acknowledgments
 
 - **Forismatic API** and **Quotable API** for providing literary quotes
