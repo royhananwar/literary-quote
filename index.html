@@ -42,6 +42,11 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            /* Outer background config */
+            background: var(--outer-bg, var(--bg-color));
+            background-size: cover;
+            background-position: center;
+            transition: background 0.3s;
         }
 
         .container {
@@ -65,73 +70,10 @@
             width: 100%;
             text-align: center;
             margin-bottom: 30px;
-        }
-
-        .quote-text {
-            font-size: 2rem;
-            line-height: 1.6;
-            margin-bottom: 30px;
+            border-radius: 12px;
             position: relative;
-        }
-
-        .quote-text::before {
-            content: """;
-            font-size: 6rem;
-            position: absolute;
-            left: -40px;
-            top: -50px;
-            opacity: 0.2;
-            color: var(--accent-color);
-        }
-
-        .quote-author {
-            font-style: italic;
-            font-size: 1.2rem;
-            color: var(--text-color);
-            opacity: 0.8;
-            align-self: flex-end;
-            margin-top: 20px;
-        }
-
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            width: 100%;
-            margin-top: 20px;
-        }
-
-        .btn {
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: var(--font-secondary);
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn:hover {
-            background-color: var(--accent-color);
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .btn svg {
-            width: 18px;
-            height: 18px;
-        }
-
-        .upper-controls {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 15px;
+            /* No background here */
+            transition: background 0.3s;
         }
 
         .icon-btn {
@@ -272,17 +214,73 @@
             background: var(--border-color);
             border-radius: 4px;
         }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: var(--font-secondary);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 120px;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+        .btn svg {
+            width: 18px;
+            height: 18px;
+        }
+        .btn span {
+            display: inline;
+        }
+        .controls .btn {
+            flex: 1 1 120px;
+            max-width: 180px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 16px;
+            }
+            .controls {
+                flex-direction: column;
+                gap: 12px;
+            }
+        }
+
+        .quote-text {
+            font-size: 2rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            position: relative;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            word-break: break-word;
+        }
+        .quote-author {
+            font-style: italic;
+            font-size: 1.2rem;
+            color: var(--text-color);
+            opacity: 0.8;
+            align-self: flex-end;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
-    <div class="upper-controls">
-        <button class="icon-btn" id="themeToggle" title="Toggle Theme">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path id="themeIcon" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-            </svg>
-        </button>
-    </div>
-
     <div class="container">
         <div class="quote-container">
             <div class="loading" id="loading"></div>
@@ -312,6 +310,12 @@
                     <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                 </svg>
                 Copy
+            </button>
+            <button class="btn" id="themeToggle" title="Toggle Theme">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path id="themeIcon" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                Theme
             </button>
         </div>
     </div>

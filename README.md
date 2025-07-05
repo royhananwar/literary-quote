@@ -2,7 +2,7 @@
 
 A beautiful Chrome extension that displays inspirational literary quotes from famous books and authors. Transform your new tab page into a source of daily wisdom and manage your favorite quotes with ease.
 
-![Literary Quotes Extension](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Literary Quotes Extension](https://img.shields.io/badge/version-1.2.0-blue.svg)
 ![Chrome Extension](https://img.shields.io/badge/chrome-extension-green.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 

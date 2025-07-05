@@ -31,6 +31,47 @@ document.addEventListener('DOMContentLoaded', () => {
         chrome.tabs.create({ url: 'chrome://extensions/?id=' + chrome.runtime.id });
     });
 
+    // Add improved background config UI to settings
+    if (settingsTab) {
+        // Remove old settings UI if present
+        const oldSections = settingsTab.querySelectorAll('.settings-section');
+        oldSections.forEach(el => el.remove());
+
+        // Create new grouped settings section
+        const section = document.createElement('div');
+        section.className = 'settings-section';
+        section.innerHTML = `
+            <div class="settings-title">Background Customization</div>
+            <div class="settings-desc">Change the background color behind the quote section.</div>
+            <div class="settings-row">
+                <span class="settings-label">Color</span>
+                <input type="color" id="quoteBgColor" class="settings-input" />
+            </div>
+            <hr style="margin:18px 0 10px 0; border:none; border-top:1px solid var(--border-color);">
+            <div class="settings-title" style="font-size:1.05rem; margin-bottom:8px;">Extension</div>
+            <div class="settings-row">
+                <span class="settings-label">Disable Extension</span>
+                <button class="btn disable-btn" id="disableExtensionBtn" title="Go to Extensions">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="margin-right:8px;"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>
+                    <span>Manage Extension</span>
+                </button>
+            </div>
+        `;
+        settingsTab.prepend(section);
+
+        // Load and show saved config
+        chrome.storage.sync.get(['quoteBgColor'], (result) => {
+            document.getElementById('quoteBgColor').value = result.quoteBgColor || '#ffffff';
+        });
+
+        document.getElementById('quoteBgColor').addEventListener('input', saveBgConfig);
+
+        function saveBgConfig() {
+            const color = document.getElementById('quoteBgColor').value;
+            chrome.storage.sync.set({ quoteBgColor: color });
+        }
+    }
+
     // Initial render
     renderFavorites();
 });
