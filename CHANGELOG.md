@@ -12,6 +12,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Quote categories feature planning
 - Social sharing functionality planning
 
+## [1.2.0] - 2025-07-05
+
+### Added
+- Favorites system for saving preferred quotes
+- Favorites tab in popup interface
+- Persistent favorites storage using Chrome Storage API
+- Toggle functionality to add/remove quotes from favorites
+
+### Enhanced
+- Improved popup interface with tabbed navigation
+- Better user experience with favorites management
+- Enhanced code structure and organization
+
+### Fixed
+- Various UI/UX improvements
+- Code optimization and refactoring
+
+## [1.1.0] - 2025-06-11
+
+### Added
+- Enhanced documentation and README
+- .gitignore file for better repository management
+- Improved code structure and organization
+
+### Enhanced
+- Better project documentation
+- Cleaner repository structure
+
 ## [1.0.0] - 2025-05-29
 
 ### Added
@@ -46,5 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CSS custom properties for theming
 - Modern JavaScript ES6+ features
 
-[Unreleased]: https://github.com/yourusername/literary-quote/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/yourusername/literary-quote/releases/tag/v1.0.0
+[Unreleased]: https://github.com/royhananwar/literary-quote/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/royhananwar/literary-quote/releases/tag/v1.2.0
+[1.1.0]: https://github.com/royhananwar/literary-quote/releases/tag/v1.1.0
+[1.0.0]: https://github.com/royhananwar/literary-quote/releases/tag/v1.0.0
