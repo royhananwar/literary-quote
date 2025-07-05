@@ -24,6 +24,26 @@ document.addEventListener('DOMContentLoaded', () => {
           // Fetch initial quote
           fetchQuote();
       });
+
+      // Load and apply quote background config (color only)
+      chrome.storage.sync.get(['quoteBgColor'], (result) => {
+          applyOuterBg(result);
+      });
+
+      function applyOuterBg(config) {
+          const body = document.body;
+          if (!body) return;
+          body.style.setProperty('--outer-bg', config.quoteBgColor || '#ffffff');
+      }
+
+      // Listen for changes to background config
+      chrome.storage.onChanged.addListener((changes, area) => {
+          if (area === 'sync' && changes.quoteBgColor) {
+              chrome.storage.sync.get(['quoteBgColor'], (result) => {
+                  applyOuterBg(result);
+              });
+          }
+      });
   } else {
       // Check user's preferred theme if not in extension context
       const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
@@ -88,25 +108,22 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Toggle theme
-  themeToggle.addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
-      
-      if (document.body.classList.contains('dark-mode')) {
-          themeIcon.setAttribute("d", "M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z");
-          
-          // Save preference if in extension context
-          if (typeof chrome !== 'undefined' && chrome.storage) {
-              chrome.storage.sync.set({ 'theme': 'dark' });
+  if (themeToggle && themeIcon) {
+      themeToggle.addEventListener('click', () => {
+          document.body.classList.toggle('dark-mode');
+          if (document.body.classList.contains('dark-mode')) {
+              themeIcon.setAttribute("d", "M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z");
+              if (typeof chrome !== 'undefined' && chrome.storage) {
+                  chrome.storage.sync.set({ 'theme': 'dark' });
+              }
+          } else {
+              themeIcon.setAttribute("d", "M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z");
+              if (typeof chrome !== 'undefined' && chrome.storage) {
+                  chrome.storage.sync.set({ 'theme': 'light' });
+              }
           }
-      } else {
-          themeIcon.setAttribute("d", "M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z");
-          
-          // Save preference if in extension context
-          if (typeof chrome !== 'undefined' && chrome.storage) {
-              chrome.storage.sync.set({ 'theme': 'light' });
-          }
-      }
-  });
+      });
+  }
 
   // Copy quote to clipboard
   copyBtn.addEventListener('click', () => {
